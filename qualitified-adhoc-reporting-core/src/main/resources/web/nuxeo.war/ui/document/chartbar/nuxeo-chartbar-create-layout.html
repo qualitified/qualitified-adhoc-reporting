@@ -1,6 +1,7 @@
 <link rel="import" href="../../elements/qualitified-metadata-selection.html">
 <link rel="import" href="../../elements/qualitified-lifecycle-state.html">
 
+
 <dom-module id="nuxeo-chartbar-create-layout">
   <template>
     <style include="reporting-styles">
@@ -26,7 +27,9 @@
       }
     </style>
     <nuxeo-resource auto on-response="_handleDocTypes" path="config/types/"></nuxeo-resource>
+
     <nuxeo-resource auto on-response="_handleFacets" path="config/facets/"></nuxeo-resource>
+
 
     <nuxeo-input role="reportWidget" value="{{document.properties.dc:title}}" label="[[i18n('label.dublincore.title')]]" type="text"></nuxeo-input>
     <h3>[[i18n('label.report.layout.dataSettings')]]</h3>
@@ -35,6 +38,7 @@
                        min-chars=0
                        multiple
                        placeholder="[[i18n('templateRenderingPage.validDocTypes.placeholder')]]"
+
                        value="{{selectedDocType}}" ></nuxeo-selectivity>
     <qualitified-lifecycle-state cycle={{cycle}} doctype="{{selectedDocType}}"></qualitified-lifecycle-state>
 
@@ -44,6 +48,9 @@
                        placeholder=[[i18n('label.report.facet')]]
                        multiple
                        value="{{facet}}" ></nuxeo-selectivity>
+
+                       value="{{document.properties.dc:title}}" ></nuxeo-selectivity>
+
 
     <nuxeo-dialog id="dialog" class="dialog" on-iron-overlay-opened="_open" >
       <div  class="metricsDiv">
@@ -143,6 +150,7 @@
                                 min-chars="0"
                                 dbl10n="true">
     </nuxeo-directory-suggestion>
+
 
     <nuxeo-dialog id="dialogUser" class="dialog" on-iron-overlay-opened="_open" >
       <div  class="metricsDiv">
@@ -249,6 +257,8 @@
           observer: '_inputFacetChanged'
         },
       },
+      },
+
       ready() {
         this.formats = [
           { id: 'sum', text: 'sum',displayLabel:"sum" },
@@ -411,7 +421,6 @@
           this.set('metrics', this.agent.concat("(",this.input,")"));
         }
       },
-
 //////////////////  Metrics Dialog ////////////////////////////
       _toggleDialog: function () {
         this.$['dialog'].toggle();

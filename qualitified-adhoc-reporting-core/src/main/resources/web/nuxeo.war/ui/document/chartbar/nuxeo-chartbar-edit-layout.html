@@ -1,5 +1,6 @@
 <link rel="import" href="../../elements/qualitified-metadata-selection.html">
 <link rel="import" href="../../elements/qualitified-lifecycle-state.html">
+
 <dom-module id="nuxeo-chartbar-edit-layout">
   <template>
     <style include="reporting-styles">
@@ -80,6 +81,7 @@
 
         <h3>[[i18n('label.report.layout.dataSettings')]]</h3>
 
+
         <nuxeo-selectivity data="[[docTypes]]"
                            min-chars=0
                            multiple
@@ -91,6 +93,7 @@
                            placeholder=[[i18n('label.report.facet')]]
                            multiple
                            value="{{facet}}" ></nuxeo-selectivity>
+
 
         <nuxeo-dialog id="dialog" class="dialog" on-iron-overlay-opened="_open" >
           <div  class="metricsDiv">
@@ -392,6 +395,7 @@
             userInput.value += this.groupefield;
           }}
       },
+
       _inputCycleChanged: function () {
         if (this.cycle ){
           this.set("document.properties.report:lifeCycleState", this.cycle);

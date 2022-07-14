@@ -1,5 +1,6 @@
 <link rel="import" href="../../elements/qualitified-metadata-selection.html">
 <link rel="import" href="../../elements/qualitified-lifecycle-state.html">
+
 <dom-module id="nuxeo-chartline-create-layout">
   <template>
     <style include="reporting-styles">
@@ -27,7 +28,9 @@
 
     <nuxeo-input role="reportWidget" value="{{document.properties.dc:title}}" label="[[i18n('title')]]" type="text"></nuxeo-input>
     <nuxeo-resource auto on-response="_handleDocTypes" path="config/types/"></nuxeo-resource>
+
     <nuxeo-resource auto on-response="_handleFacets" path="config/facets/"></nuxeo-resource>
+
     <h3>[[i18n('label.report.layout.dataSettings')]]</h3>
 
     <label>[[i18n('label.report.documentType')]]</label>
@@ -44,6 +47,7 @@
                        placeholder=[[i18n('label.report.facet')]]
                        multiple
                        value="{{facet}}" ></nuxeo-selectivity>
+
     <nuxeo-dialog id="dialog" class="dialog" on-iron-overlay-opened="_open" >
       <div  class="metricsDiv">
         <nuxeo-selectivity data="[[formats]]"
@@ -244,6 +248,7 @@
           { id: 'count', text: 'count' ,displayLabel:"count"},
         ];
       },
+
       _handleDocTypes: function(e) {
       var docTypes = [{
         id: 'all',
@@ -259,6 +264,7 @@
       });
       this.set('docTypes', docTypes);
     },
+
       _handleFacets: function(e) {
         var facets = [{
           id: 'all',
@@ -345,6 +351,7 @@
             userInput.value += this.groupefield;
           }}
       },
+
       _inputCycleChanged: function () {
         if (this.cycle ){
           this.set("document.properties.report:lifeCycleState", this.cycle);
@@ -391,6 +398,7 @@
         }
       },
 
+
       _selectedDocTypeChanged: function (selectedDocType) {
         if (selectedDocType){
           this.document.properties["dc:title"] = selectedDocType.toString();
@@ -398,6 +406,7 @@
         }
 
       },
+
 //////////////////  Metrics Dialog ////////////////////////////
       _toggleDialog: function () {
         this.$['dialog'].toggle();

@@ -1,5 +1,6 @@
 <link rel="import" href="../../elements/qualitified-metadata-selection.html">
 <link rel="import" href="../../elements/qualitified-lifecycle-state.html">
+
 <dom-module id="nuxeo-count-create-layout">
   <template>
     <style include="reporting-styles">
@@ -27,7 +28,9 @@
 
     <nuxeo-input role="reportWidget" value="{{document.properties.dc:title}}" label="[[i18n('title')]]" type="text"></nuxeo-input>
     <nuxeo-resource auto on-response="_handleDocTypes" path="config/types/"></nuxeo-resource>
+
     <nuxeo-resource auto on-response="_handleFacets" path="config/facets/"></nuxeo-resource>
+
     <h3>[[i18n('label.report.layout.dataSettings')]]</h3>
 
     <label>[[i18n('label.report.documentType')]]</label>
@@ -44,6 +47,8 @@
                        placeholder=[[i18n('label.report.facet')]]
                        multiple
                        value="{{facet}}" ></nuxeo-selectivity>
+
+  
     <nuxeo-dialog id="dialog" class="dialog" on-iron-overlay-opened="_open" >
       <div  class="metricsDiv">
         <nuxeo-selectivity data="[[formats]]"
@@ -166,6 +171,7 @@
                 value:"",
               },
 
+
         selectedDocType:{
           type: String,
           notify: true,
@@ -179,6 +185,7 @@
           type:String,
           observer: '_inputFacetChanged'
         },
+
       },
             ready() {
       this.formats = [
@@ -204,6 +211,7 @@
       });
       this.set('docTypes', docTypes);
     },
+
       _handleFacets: function(e) {
         var facets = [{
           id: 'all',
@@ -227,6 +235,7 @@
       },
 
       _addMetricText :function () {
+
       var metricsInput = this.$.metricsTest;
 
       if (metricsInput.value == null) {
@@ -259,6 +268,7 @@
           userInput.value += this.userfield;
         }}
     },
+
       _inputCycleChanged: function () {
         if (this.cycle ){
           this.set("document.properties.report:lifeCycleState", this.cycle);
@@ -272,6 +282,7 @@
 
 
       _inputDateChanged: function () {
+
       if (this.input ){
         this.set("datefield", this.input);
       }
@@ -289,6 +300,7 @@
         this.set('metrics', this.agent.concat("(",this.input,")"));
       }
     },
+
       _selectedDocTypeChanged: function (selectedDocType) {
         if (selectedDocType){
           this.document.properties["dc:title"] = selectedDocType.toString();
@@ -296,6 +308,7 @@
         }
 
       },
+
     //////////////////  Metrics Dialog ////////////////////////////
     _toggleDialog: function () {
       this.$['dialog'].toggle();

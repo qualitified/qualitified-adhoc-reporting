@@ -1,5 +1,6 @@
 <link rel="import" href="../../elements/qualitified-metadata-selection.html">
 <link rel="import" href="../../elements/qualitified-lifecycle-state.html">
+
 <dom-module id="nuxeo-chartline-edit-layout">
   <template>
     <style include="reporting-styles">
@@ -82,6 +83,7 @@
 
         <h3>[[i18n('label.report.layout.dataSettings')]]</h3>
 
+
         <nuxeo-selectivity data="[[docTypes]]"
                            min-chars=0
                            multiple
@@ -94,6 +96,7 @@
                            multiple
                            value="{{facet}}" ></nuxeo-selectivity>
         <nuxeo-dialog id="dialog" class="dialog" on-iron-overlay-opened="_open" >
+
         <div  class="metricsDiv">
           <nuxeo-selectivity data="[[formats]]"
                              min-chars=0
@@ -267,6 +270,7 @@
           notify:true,
           value:"",
         },
+
         selectedDocType:{
           type: String,
           notify: true,
@@ -317,6 +321,7 @@
                 .then(function (data) {
                   const copyItems = [];
 
+
                   data.sort().forEach((item) => {
                     copyItems.push(item.name);
                   });
@@ -327,6 +332,7 @@
                   this.set('facets', facets);
                 }.bind(this));
       },
+
 
       _addMetricText :function () {
         var metricsInput = this.$.metricsTest;
@@ -392,6 +398,7 @@
             userInput.value += this.groupefield;
           }}
       },
+
       _inputCycleChanged: function () {
         if (this.cycle ){
           this.set("document.properties.report:lifeCycleState", this.cycle);
@@ -402,6 +409,7 @@
           this.set("document.properties.report:mixintype", this.facet.toString());
         }
       },
+
       _inputDateChanged: function () {
         if (this.input ){
           this.set("datefield", this.input);
