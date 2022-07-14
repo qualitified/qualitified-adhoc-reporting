@@ -1,4 +1,6 @@
 <link rel="import" href="../../elements/qualitified-metadata-selection.html">
+<link rel="import" href="../../elements/qualitified-lifecycle-state.html">
+
 
 <dom-module id="nuxeo-chartbar-create-layout">
   <template>
@@ -26,16 +28,29 @@
     </style>
     <nuxeo-resource auto on-response="_handleDocTypes" path="config/types/"></nuxeo-resource>
 
+    <nuxeo-resource auto on-response="_handleFacets" path="config/facets/"></nuxeo-resource>
+
 
     <nuxeo-input role="reportWidget" value="{{document.properties.dc:title}}" label="[[i18n('label.dublincore.title')]]" type="text"></nuxeo-input>
     <h3>[[i18n('label.report.layout.dataSettings')]]</h3>
     <label>[[i18n('label.report.documentType')]]</label>
     <nuxeo-selectivity data="[[docTypes]]"
                        min-chars=0
+                       multiple
                        placeholder="[[i18n('templateRenderingPage.validDocTypes.placeholder')]]"
+
+                       value="{{selectedDocType}}" ></nuxeo-selectivity>
+    <qualitified-lifecycle-state cycle={{cycle}} doctype="{{selectedDocType}}"></qualitified-lifecycle-state>
+
+
+    <nuxeo-selectivity data="[[facets]]"
+                       min-chars=0
+                       placeholder=[[i18n('label.report.facet')]]
+                       multiple
+                       value="{{facet}}" ></nuxeo-selectivity>
+
                        value="{{document.properties.dc:title}}" ></nuxeo-selectivity>
-    <nuxeo-input role="reportWidget" value="{{document.properties.report:lifeCycleState}}" label="[[i18n('label.report.lifecycleState')]]" type="text"></nuxeo-input>
-    <nuxeo-input value="{{document.properties.report:mixintype}}" label="[[i18n('label.report.facet')]]" type="text" role="reportWidget"></nuxeo-input>
+
 
     <nuxeo-dialog id="dialog" class="dialog" on-iron-overlay-opened="_open" >
       <div  class="metricsDiv">
@@ -174,6 +189,7 @@
          */
         document: {
           type: Object,
+          notify:true,
         },
         input: {
           type:String,
@@ -219,6 +235,28 @@
           notify:true,
           value:"",
         },
+        params: {
+          type: Object,
+          value: {}
+        },
+        docSelection:{
+          type: String,
+          notify: true,
+        },
+        selectedDocType:{
+                type: String,
+                notify: true,
+                observer: "_selectedDocTypeChanged"
+              },
+        cycle: {
+          type:String,
+          observer: '_inputCycleChanged'
+        },
+        facet: {
+          type:String,
+          observer: '_inputFacetChanged'
+        },
+      },
       },
 
       ready() {
@@ -244,6 +282,27 @@
           });
         });
         this.set('docTypes', docTypes);
+      },
+      _handleFacets: function(e) {
+        var facets = [{
+          id: 'all',
+          text: this.i18n('templateRenderingPage.label.document.type.all'),
+          displayLabel: this.i18n('templateRenderingPage.label.document.type.all')
+        }];
+        fetch(window.location.href.split("ui/#!")[0] + 'api/v1/config/facets')
+                .then((resp) => resp.json())
+                .then(function (data) {
+                  const copyItems = [];
+
+                  data.sort().forEach((item) => {
+                    copyItems.push(item.name);
+                  });
+                  copyItems.sort(function (a, b) {
+                    return a.localeCompare(b); //using String.prototype.localCompare()
+                  });
+                  var facets = Array.from(copyItems);
+                  this.set('facets', facets);
+                }.bind(this));
       },
 
       _addMetricText :function () {
@@ -310,6 +369,16 @@
             userInput.value += this.groupefield;
           }}
       },
+      _inputCycleChanged: function () {
+        if (this.cycle ){
+          this.set("document.properties.report:lifeCycleState", this.cycle);
+        }
+      },
+      _inputFacetChanged: function () {
+        if (this.facet ){
+          this.set("document.properties.report:mixintype", this.facet.toString());
+        }
+      },
 
       _inputDateChanged: function () {
         if (this.input ){
@@ -337,6 +406,14 @@
         if (this.input ){
           this.set("userfield", this.input);
         }
+      },
+      _selectedDocTypeChanged: function (selectedDocType) {
+        if (selectedDocType){
+          this.document.properties["dc:title"] = selectedDocType.toString();
+          this.document.properties["report:primarytype"] = selectedDocType.toString();
+          //console.log("document after doc selection ",this.document)
+        }
+
       },
 
       _inputChanged: function () {

@@ -99,6 +99,7 @@
         });
         this.set('docTypes', docTypes);
       },
+
       _typeDocChanged:function (doctypeSelection) {
         fetch(window.location.href.split("ui/#!")[0] + 'api/v1/config/types/' + doctypeSelection)
                 .then((resp) => resp.json())
