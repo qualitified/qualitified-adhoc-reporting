@@ -8,9 +8,7 @@
         <nuxeo-selectivity  data="[[lifeCycleStates]]"
                             min-chars=0
                             placeholder="select LifeCycle state"
-                            multiple
-                            value="{{cycleSelected}}" >
-        </nuxeo-selectivity>
+                            value="{{lifeCycleState}}"></nuxeo-selectivity>
 
 
 
@@ -22,45 +20,36 @@
             behaviors: [Nuxeo.LayoutBehavior],
             properties: {
                 document: {
-                    type: Object
+                    type: Object,
                 },
-                doctype:{
-                    type: Array,
-                    notify: true,
+                doctypelifecycle:{
+                    type: String,
                     observer: '_docTypeChanged'
                 },
                 lifeCycleStates:{
                     type: Array,
                     notify: true
                 },
-                cycleSelected:{
-                    String,
-                    notify:true,
-                    value:"",
-                    observer: '_sendChanged'
-                },
-                cycle: {
-                    String,
-                    notify:true
+                lifeCycleState: {
+                    type: String,
+                    notify: true,
                 },
             },
-            _docTypeChanged:function(doctype){
-                this.$.updateListLifeCycle.params = {"docTypeSelection": doctype.toString()};
+            _docTypeChanged:function(){
+                this.$.updateListLifeCycle.params = {"docTypeSelection": this.doctypelifecycle};
                 this.$.updateListLifeCycle.execute().then(function (resp) {
-                    this.set("lifeCycleStates", resp)
+                    const uniqueLifeCycleStates = [...new Set(resp)];
+                    this.set("lifeCycleStates", uniqueLifeCycleStates);
                 }.bind(this))
                     .catch(function(error) {
                         var empty = []
                         this.set("lifeCycleStates", empty)
-                       // alert("No LifeCycle State found for the DocType Selection\n" + error);
+                        // alert("No LifeCycle State found for the DocType Selection\n" + error);
                     }.bind(this));
             },
-            _sendChanged: function() {
-                if( this.cycleSelected){
-                    this.set('cycle', this.cycleSelected.toString());
-                }
 
-            },
         });
     </script>
 </dom-module>
+
+
