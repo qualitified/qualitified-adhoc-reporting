@@ -4,9 +4,14 @@
 <dom-module id="nuxeo-chartpie-edit-layout">
   <template>
     <style include="reporting-styles">
+      iron-pages div {
+        display: flex !important;;
+        flex-direction: column;
+        justify-content: center;
+      }
       .metricsDiv {
         display: flex;
-        /* width: auto; */
+        flex-direction: inherit;
         justify-content: space-evenly;
       }
       .dialog {
@@ -16,23 +21,23 @@
         top: 27em;
       }
       .buttons {
+        flex-direction: inherit;
         text-decoration: underline;
         color: blue;
         opacity: 100%;
       }
       .metricsInputDiv {
-        display: inline-flex;
-        width: -webkit-fill-available;
+        flex-direction: initial;
       }
     </style>
 
-    <paper-tabs selected="{{selected}}">
+    <paper-tabs selected="{{selectedTab}}">
       <paper-tab>Simple</paper-tab>
       <paper-tab>Advanced</paper-tab>
     </paper-tabs>
     <nuxeo-resource auto on-response="_handleDocTypes" path="config/types/"></nuxeo-resource>
     <nuxeo-resource auto on-response="_handleFacets" path="config/facets/"></nuxeo-resource>
-    <iron-pages selected="{{selected}}">
+    <iron-pages selected="{{selectedTab}}">
 
       <!-- TAB - Simple -->
       <div>
@@ -42,10 +47,10 @@
 
         <nuxeo-selectivity data="[[docTypes]]"
                            min-chars=0
-                           multiple
                            placeholder="[[i18n('templateRenderingPage.validDocTypes.placeholder')]]"
-                           value="{{selectedDocType}}" ></nuxeo-selectivity>
-        <qualitified-lifecycle-state cycle={{cycle}} doctype="{{selectedDocType}}"></qualitified-lifecycle-state>
+                           value="{{document.properties.report:primarytype}}" ></nuxeo-selectivity>
+
+        <qualitified-lifecycle-state doctypelifecycle="{{document.properties.report:primarytype}}" life-cycle-state="{{document.properties.report:lifeCycleState}}" hidden$="[[selectedTab !== 0]]"></qualitified-lifecycle-state>
         <nuxeo-input role="reportWidget" value="{{document.properties.report:groupLimit}}" label="[[i18n('label.report.groupLimit')]]" type="number"></nuxeo-input>
         <nuxeo-dialog id="dialogUserS" class="dialog" on-iron-overlay-opened="_open" >
           <div  class="metricsDiv">
@@ -54,8 +59,8 @@
           </div>
           <nuxeo-input id="responsibleUser" role="reportWidget" value="{{document.properties.report:responsibleUser}}" label="[[i18n('label.report.responsibleUser')]]" type="text"></nuxeo-input>
           <div class="buttons">
-            <paper-button noink dialog-dismiss on-tap="_closeUser1">Close</paper-button>
-            <paper-button noink  on-tap="_clearUser1">Clear</paper-button>
+            <paper-button style="flex: auto; background-color: gainsboro ;" noink dialog-dismiss on-tap="_closeUser1">Close</paper-button>
+            <paper-button style="flex: auto; background-color: darkgrey ;" noink  on-tap="_closeUser1">Clear</paper-button>
           </div>
         </nuxeo-dialog>
         <div class="metricsInputDiv">
@@ -73,30 +78,29 @@
 
         <nuxeo-selectivity data="[[docTypes]]"
                            min-chars=0
-                           multiple
                            placeholder="[[i18n('templateRenderingPage.validDocTypes.placeholder')]]"
-                           value="{{selectedDocType}}" ></nuxeo-selectivity>
-        <qualitified-lifecycle-state cycle={{cycle}} doctype="{{selectedDocType}}"></qualitified-lifecycle-state>
+                           value="{{document.properties.report:primarytype}}" ></nuxeo-selectivity>
+        <qualitified-lifecycle-state  doctypelifecycle="{{document.properties.report:primarytype}}" life-cycle-state="{{document.properties.report:lifeCycleState}}" hidden$="[[selectedTab !== 1]]"></qualitified-lifecycle-state>
         <nuxeo-selectivity data="[[facets]]"
                            min-chars=0
                            placeholder=[[i18n('label.report.facet')]]
-                           multiple
-                           value="{{facet}}" ></nuxeo-selectivity>
+                           value="{{document.properties.report:mixintype}}" ></nuxeo-selectivity>
+
 
         <nuxeo-dialog id="dialog" class="dialog" on-iron-overlay-opened="_open" >
-        <div  class="metricsDiv">
-          <nuxeo-selectivity data="[[formats]]"
-                             min-chars=0
-                             placeholder="[[i18n('MetricsType')]]"
-                             value="{{agent}}" ></nuxeo-selectivity>
-          <qualitified-metadata-selection style="flex:2"  input="{{input}}"></qualitified-metadata-selection>
-          <paper-icon-button id="details" noink="" icon="nuxeo:add" on-tap="_addMetricText"></paper-icon-button>
-        </div>
-        <nuxeo-input id="metricsTest" role="reportWidget" value="{{document.properties.report:metrics}}" label="[[i18n('label.report.metrics')]]" type="text"></nuxeo-input>
-        <div class="buttons">
-          <paper-button noink dialog-dismiss on-tap="_close">Close</paper-button>
-          <paper-button noink  on-tap="_clear">Clear</paper-button>
-        </div>
+          <div  class="metricsDiv">
+            <nuxeo-selectivity data="[[formats]]"
+                               min-chars=0
+                               placeholder="[[i18n('MetricsType')]]"
+                               value="{{agent}}" ></nuxeo-selectivity>
+            <qualitified-metadata-selection style="flex:2"  input="{{input}}"></qualitified-metadata-selection>
+            <paper-icon-button id="details" noink="" icon="nuxeo:add" on-tap="_addMetricText"></paper-icon-button>
+          </div>
+          <nuxeo-input id="metricsTest" role="reportWidget" value="{{document.properties.report:metrics}}" label="[[i18n('label.report.metrics')]]" type="text"></nuxeo-input>
+          <div class="buttons">
+            <paper-button style="flex: auto; background-color: gainsboro ;" noink dialog-dismiss on-tap="_close">Close</paper-button>
+            <paper-button style="flex: auto; background-color: darkgrey ;" noink  on-tap="_close">Clear</paper-button>
+          </div>
         </nuxeo-dialog>
         <div class="metricsInputDiv">
           <nuxeo-input style="flex: auto;" id="metricsTest" role="reportWidget" value="{{document.properties.report:metrics}}" label="[[i18n('label.report.metrics')]]" type="text"></nuxeo-input>
@@ -110,8 +114,8 @@
           </div>
           <nuxeo-input id="groupedByData" role="reportWidget" value="{{document.properties.report:groupedBy}}" label="[[i18n('label.report.groupedBy')]]" type="text"></nuxeo-input>
           <div class="buttons">
-            <paper-button noink dialog-dismiss on-tap="_closeGroup">Close</paper-button>
-            <paper-button noink  on-tap="_clearGroup">Clear</paper-button>
+            <paper-button style="flex: auto; background-color: gainsboro ;" noink dialog-dismiss on-tap="_closeGroup">Close</paper-button>
+            <paper-button style="flex: auto; background-color: darkgrey ;" noink  on-tap="_closeGroup">Clear</paper-button>
           </div>
         </nuxeo-dialog>
         <div class="metricsInputDiv">
@@ -127,8 +131,8 @@
           </div>
           <nuxeo-input id="fieldDate" role="reportWidget" value="{{document.properties.report:dateField}}" label="[[i18n('label.report.dateField')]]" type="text"></nuxeo-input>
           <div class="buttons">
-            <paper-button noink dialog-dismiss on-tap="_closeDate">Close</paper-button>
-            <paper-button noink  on-tap="_clearDate">Clear</paper-button>
+            <paper-button style="flex: auto; background-color: gainsboro ;" noink dialog-dismiss on-tap="_closeDate">Close</paper-button>
+            <paper-button style="flex: auto; background-color: darkgrey ;" noink  on-tap="_closeDate">Clear</paper-button>
           </div>
         </nuxeo-dialog>
         <div class="metricsInputDiv">
@@ -142,8 +146,8 @@
           </div>
           <nuxeo-input id="responsibleUser" role="reportWidget" value="{{document.properties.report:responsibleUser}}" label="[[i18n('label.report.responsibleUser')]]" type="text"></nuxeo-input>
           <div class="buttons">
-            <paper-button noink dialog-dismiss on-tap="_closeUser">Close</paper-button>
-            <paper-button noink  on-tap="_clearUser">Clear</paper-button>
+            <paper-button style="flex: auto; background-color: gainsboro ;" noink dialog-dismiss on-tap="_closeUser">Close</paper-button>
+            <paper-button style="flex: auto; background-color: darkgrey ;" noink  on-tap="_closeUser">Clear</paper-button>
           </div>
         </nuxeo-dialog>
         <div class="metricsInputDiv">
@@ -205,24 +209,12 @@
           notify:true,
           value:"",
         },
-
-        selectedDocType:{
-          type: String,
-          notify: true,
-          observer: "_selectedDocTypeChanged"
+        selectedTab: {
+          type: Number,
+          value: 0,
         },
-        cycle: {
-          type:String,
-          observer: '_inputCycleChanged'
-        },
-        facet: {
-          type:String,
-          observer: '_inputFacetChanged'
-        },
-
       },
       ready() {
-        this.selected = 0;
         this.formats = [
           { id: 'sum', text: 'sum',displayLabel:"sum" },
           { id: 'avg', text: 'avg',displayLabel:"avg" },
@@ -231,6 +223,7 @@
           { id: 'count', text: 'count' ,displayLabel:"count"},
         ];
       },
+      //////////////////  DocTypes List Function ////////////////////////////
       _handleDocTypes: function(e) {
         var docTypes = [{
           id: 'all',
@@ -246,7 +239,7 @@
         });
         this.set('docTypes', docTypes);
       },
-
+      //////////////////  Facets List Function ////////////////////////////
       _handleFacets: function(e) {
         var facets = [{
           id: 'all',
@@ -269,7 +262,7 @@
                 }.bind(this));
       },
 
-
+//////////////////  add inputs in Dialog ////////////////////////////
       _addMetricText :function () {
         var metricsInput = this.$.metricsTest;
 
@@ -289,6 +282,28 @@
         } else if (dateInput.value !== null) {
           if (!dateInput.value.includes(this.datefield)) {
             dateInput.value += this.datefield;
+          }}
+      },
+
+      _addKeyFieldText :function () {
+        var keyInput = this.$.keyMetadata;
+        this._inputKeyChanged();
+        if (keyInput.value == null) {
+          keyInput.value = this.keyfield;
+        } else if (keyInput.value !== null) {
+          if (!keyInput.value.includes(this.keyfield)) {
+            keyInput.value += this.keyfield;
+          }}
+      },
+
+      _addMetadataFieldText :function () {
+        var metaInput = this.$.metaValue;
+        this._inputMetadataChanged();
+        if (metaInput.value == null) {
+          metaInput.value = this.metadatafield;
+        } else if (metaInput.value !== null) {
+          if (!metaInput.value.includes(this.metadatafield)) {
+            metaInput.value += this.metadatafield;
           }}
       },
 
@@ -313,24 +328,23 @@
           }}
       },
 
-      _inputCycleChanged: function () {
-        if (this.cycle ){
-          this.set("document.properties.report:lifeCycleState", this.cycle);
-        }
-      },
-      _inputFacetChanged: function () {
-        if (this.facet ){
-          this.set("document.properties.report:mixintype", this.facet.toString());
-        }
-      },
-
+//////////////////  Inputs Changes ////////////////////////////
       _inputDateChanged: function () {
         if (this.input ){
           this.set("datefield", this.input);
         }
       },
 
-
+      _inputKeyChanged: function () {
+        if (this.input ){
+          this.set("keyfield", this.input);
+        }
+      },
+      _inputMetadataChanged: function () {
+        if (this.input ){
+          this.set("metadatafield", this.input);
+        }
+      },
       _inputGroupeChanged: function () {
         if (this.input ){
           this.set("groupefield", this.input);
@@ -348,15 +362,6 @@
           this.set('metrics', this.agent.concat("(",this.input,")"));
         }
       },
-
-      _selectedDocTypeChanged: function (selectedDocType) {
-        if (selectedDocType){
-          //this.document.properties["dc:title"] = selectedDocType.toString();
-          this.document.properties["report:primarytype"] = selectedDocType.toString();
-        }
-
-      },
-
 //////////////////  Metrics Dialog ////////////////////////////
       _toggleDialog: function () {
         this.$['dialog'].toggle();
@@ -378,6 +383,17 @@
         this.$.fieldDate.value = "";
       },
 
+//////////////////  Key metadata Dialog ////////////////////////////
+
+      _toggleDialogKey: function () {
+        this.$['dialogKey'].toggle();
+      },
+      _closeKey: function () {
+        this.$['dialogKey'].close();
+      },
+      _clearKey: function () {
+        this.$.keyMetadata.value = "";
+      },
 
 //////////////////  Responsible User  Dialog ////////////////////////////
       _toggleDialogUser: function () {
@@ -400,6 +416,16 @@
       _clearGroup: function () {
         this.$.groupedByData.value = "";
       },
+      //////////////////  metadata  field  Dialog ////////////////////////////
+      _toggleDialogMeta: function () {
+        this.$['dialogMeta'].toggle();
+      },
+      _closeMeta: function () {
+        this.$['dialogMeta'].close();
+      },
+      _clearMeta: function () {
+        this.$.metaValue.value = "";
+      },
       //////////////////  user  field  Dialog Simple ////////////////////////////
       _toggleDialogUser1: function () {
         this.$['dialogUserS'].toggle();
@@ -413,3 +439,5 @@
     });
   </script>
 </dom-module>
+
+

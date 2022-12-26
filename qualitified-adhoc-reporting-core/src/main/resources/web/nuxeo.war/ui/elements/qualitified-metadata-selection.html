@@ -101,24 +101,28 @@
       },
 
       _typeDocChanged:function (doctypeSelection) {
-        fetch(window.location.href.split("ui/#!")[0] + 'api/v1/config/types/' + doctypeSelection)
-                .then((resp) => resp.json())
-                .then(function (data) {
+        if (doctypeSelection){
+          fetch(window.location.href.split("ui/#!")[0] + 'api/v1/config/types/' + doctypeSelection)
+                  .then((resp) => resp.json())
+                  .then(function (data) {
+                    if (Array.isArray(data.schemas)) {
 
-                  var Names_prefix = data.schemas.map(function (task, index, array) {
-
-                    var pr= task.prefix;
-                    var na= task.name;
-
-                    var OB= {pr,na}
-                    return OB
-                  });
-                  this.set('namesPrefixList', Names_prefix);
-                  var schemasAvailble = data.schemas.map(item => item.name)
-                  this.set('schemasAvailble', schemasAvailble);
-
-                }.bind(this));
+                      var Names_prefix = data.schemas.map(function (task, index, array) {
+                        var pr= task.prefix;
+                        var na= task.name;
+                        var OB= {pr,na}
+                        return OB
+                      });
+                      this.set('namesPrefixList', Names_prefix);
+                      var schemasAvailble = data.schemas.map(item => item.name)
+                      this.set('schemasAvailble', schemasAvailble);
+                    } else {
+                      // data.schemas is not an array
+                    }
+                  }.bind(this));
+        }
       },
+
       _typeMotChanged:function (schemaSelected) {
         if (typeof schemaSelected !== 'undefined') {
 
@@ -139,17 +143,18 @@
           fetch(window.location.href.split("ui/#!")[0] + 'api/v1/config/schemas/' + schemaSelected)
                   .then((resp) => resp.json())
                   .then(function (data) {
-                    var mapFields = new Map(Object.entries(data.fields))
-                    var myFieldKeys = mapFields.keys();
-                    var propsAvailble = Array.from(myFieldKeys);
-                    this.set('propsAvailble', propsAvailble);
+                    if (typeof data.fields !== 'undefined' && data.fields !== null) {
+                      var mapFields = new Map(Object.entries(data.fields))
+                      var myFieldKeys = mapFields.keys();
+                      var propsAvailble = Array.from(myFieldKeys);
+                      this.set('propsAvailble', propsAvailble);
+                    } else {
+                      // data.fields
+                    }
                   }.bind(this));
           return status;
-
         }
-
       },
-
       _sendChanged: function() {
         if( this.propsSelected){
           this.set('input', this.prefixF.concat(":", this.propsSelected));
@@ -159,3 +164,5 @@
     });
   </script>
 </dom-module>
+
+
