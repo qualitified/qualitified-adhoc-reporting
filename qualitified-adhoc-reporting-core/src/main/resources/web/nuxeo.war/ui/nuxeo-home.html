@@ -96,6 +96,7 @@
       }
     </style>
     <nuxeo-connection id="nxcon" user="{{currentUser}}"></nuxeo-connection>
+    <nuxeo-operation id="createBlocs" op="Document.CheckAndCreateDefaultBlocks" ></nuxeo-operation>
     <nuxeo-page>
 
       <div slot="header">
@@ -197,6 +198,9 @@
   <script>
     Polymer({
       is: 'nuxeo-home',
+      ready: function() {
+      this.$.createBlocs.execute();
+    },
       behaviors: [Nuxeo.RoutingBehavior, Nuxeo.FormatBehavior, Nuxeo.ChartDataBehavior, Report.DataBehavior, Nuxeo.I18nBehavior],
       properties: {
 
