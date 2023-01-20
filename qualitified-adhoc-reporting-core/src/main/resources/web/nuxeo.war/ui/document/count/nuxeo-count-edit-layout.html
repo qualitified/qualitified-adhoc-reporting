@@ -309,16 +309,6 @@
           }}
       },
 //////////////////  Inputs Changes ////////////////////////////
-      _inputCycleChanged: function () {
-        if (this.cycle ){
-          this.set("document.properties.report:lifeCycleState", this.cycle);
-        }
-      },
-      _inputFacetChanged: function () {
-        if (this.facet ){
-          this.set("document.properties.report:mixintype", this.facet.toString());
-        }
-      },
       _inputDateChanged: function () {
         if (this.input ){
           this.set("datefield", this.input);
