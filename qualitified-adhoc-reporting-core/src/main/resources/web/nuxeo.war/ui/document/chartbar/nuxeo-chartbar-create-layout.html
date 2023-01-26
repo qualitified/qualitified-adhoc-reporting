@@ -4,7 +4,7 @@
 
 <dom-module id="nuxeo-chartbar-create-layout">
   <template>
-    <style include="reporting-styles">
+    <style >
       .metricsDiv {
         display: flex;
         /* width: auto; */
@@ -32,20 +32,29 @@
     <nuxeo-resource auto on-response="_handleFacets" path="config/facets/"></nuxeo-resource>
 
 
-    <nuxeo-input role="reportWidget" value="{{document.properties.dc:title}}" label="[[i18n('label.dublincore.title')]]" type="text"></nuxeo-input>
+    <nuxeo-input
+            role="reportWidget"
+            required
+            value="{{document.properties.dc:title}}"
+            label="[[i18n('label.dublincore.title')]]"
+            placeholder="[[i18n('placeholder.report.title')]]"
+            type="text"></nuxeo-input>
     <h3>[[i18n('label.report.layout.dataSettings')]]</h3>
     <label>[[i18n('label.report.documentType')]]</label>
    
     <nuxeo-selectivity data="[[docTypes]]"
-    min-chars=0
-    placeholder="[[i18n('templateRenderingPage.validDocTypes.placeholder')]]"
-    value="{{document.properties.report:primarytype}}" ></nuxeo-selectivity>
+                       min-chars=0
+                       placeholder="[[i18n('templateRenderingPage.validDocTypes.placeholder')]]"
+                       value="{{document.properties.report:primarytype}}" ></nuxeo-selectivity>
 
-    <qualitified-lifecycle-state doctypelifecycle="{{document.properties.report:primarytype}}" life-cycle-state="{{document.properties.report:lifeCycleState}}"></qualitified-lifecycle-state>
+    <qualitified-lifecycle-state
+            doctypelifecycle="{{document.properties.report:primarytype}}"
+            life-cycle-state="{{document.properties.report:lifeCycleState}}"></qualitified-lifecycle-state>
     <nuxeo-selectivity data="[[facets]]"
          min-chars=0
-         placeholder=[[i18n('label.report.facet')]]
-value="{{document.properties.report:mixintype}}" ></nuxeo-selectivity>
+         label=[[i18n('label.report.facet')]]
+         placeholder=[[i18n('placeholder.report.facet')]]
+         value="{{document.properties.report:mixintype}}" ></nuxeo-selectivity>
 
  
 
@@ -53,19 +62,31 @@ value="{{document.properties.report:mixintype}}" ></nuxeo-selectivity>
       <div  class="metricsDiv">
         <nuxeo-selectivity data="[[formats]]"
                            min-chars=0
-                           placeholder="[[i18n('MetricsType')]]"
+                           label="[[i18n('MetricsType')]]"
+                           placeholder=[[i18n('placeholder.report.formats')]]
                            value="{{agent}}" ></nuxeo-selectivity>
         <qualitified-metadata-selection style="flex:2"  input="{{input}}"></qualitified-metadata-selection>
         <paper-icon-button id="details" noink="" icon="nuxeo:add" on-tap="_addMetricText"></paper-icon-button>
       </div>
-      <nuxeo-input id="metricsTest" role="reportWidget" value="{{document.properties.report:metrics}}" label="[[i18n('label.report.metrics')]]" type="text"></nuxeo-input>
+      <nuxeo-input id="metricsTest"
+                   role="reportWidget"
+                   value="{{document.properties.report:metrics}}"
+                   label="[[i18n('label.report.metrics')]]"
+                   placeholder=[[i18n('placeholder.report.metrics')]]
+                   type="text"></nuxeo-input>
       <div class="buttons">
         <paper-button style="flex: auto; background-color: gainsboro ;" noink dialog-dismiss on-tap="_close">Close</paper-button>
         <paper-button style="flex: auto; background-color: darkgrey ;" noink  on-tap="_clear">Clear</paper-button>
       </div>
     </nuxeo-dialog>
     <div class="metricsInputDiv">
-      <nuxeo-input style="flex: auto;" id="metricsTest" role="reportWidget" value="{{document.properties.report:metrics}}" label="[[i18n('label.report.metrics')]]" type="text"></nuxeo-input>
+      <nuxeo-input style="flex: auto;"
+                   id="metricsTest"
+                   role="reportWidget"
+                   value="{{document.properties.report:metrics}}"
+                   label="[[i18n('label.report.metrics')]]"
+                   placeholder=[[i18n('placeholder.report.metrics')]]
+                   type="text"></nuxeo-input>
       <paper-icon-button id="details" noink="" icon="nuxeo:add" role="button" on-tap="_toggleDialog"></paper-icon-button>
     </div>
 
@@ -74,21 +95,33 @@ value="{{document.properties.report:mixintype}}" ></nuxeo-selectivity>
         <qualitified-metadata-selection style="flex:2"  input="{{input}}"></qualitified-metadata-selection>
         <paper-icon-button id="details" noink="" icon="nuxeo:add" on-tap="_addGroupFieldText"></paper-icon-button>
       </div>
-      <nuxeo-input id="groupedByData" role="reportWidget" value="{{document.properties.report:groupedBy}}" label="[[i18n('label.report.groupedBy')]]" type="text"></nuxeo-input>
+      <nuxeo-input id="groupedByData"
+                   role="reportWidget"
+                   value="{{document.properties.report:groupedBy}}"
+                   label="[[i18n('label.report.groupedBy')]]"
+                   placeholder=[[i18n('placeholder.report.groupedBy')]]
+                   type="text"></nuxeo-input>
       <div class="buttons">
         <paper-button style="flex: auto; background-color: gainsboro ;" noink dialog-dismiss on-tap="_closeGroup">Close</paper-button>
         <paper-button style="flex: auto; background-color: darkgrey ;" noink  on-tap="_clearGroup">Clear</paper-button>
       </div>
     </nuxeo-dialog>
     <div class="metricsInputDiv">
-      <nuxeo-input style="flex: auto;" id="groupedByData" role="reportWidget" value="{{document.properties.report:groupedBy}}" label="[[i18n('label.report.groupedBy')]]" type="text"></nuxeo-input>
+      <nuxeo-input style="flex: auto;"
+                   id="groupedByData"
+                   role="reportWidget"
+                   value="{{document.properties.report:groupedBy}}"
+                   label="[[i18n('label.report.groupedBy')]]"
+                   placeholder=[[i18n('placeholder.report.groupedBy')]]
+                   type="text"></nuxeo-input>
       <paper-icon-button id="details" noink="" icon="nuxeo:add" role="button" on-tap="_toggleDialogGroup"></paper-icon-button>
     </div>
 
-    <nuxeo-input role="reportWidget" value="{{document.properties.report:groupLimit}}" label="[[i18n('label.report.groupLimit')]]" type="number"></nuxeo-input>
-
-
-
+    <nuxeo-input role="reportWidget"
+                 value="{{document.properties.report:groupLimit}}"
+                 label="[[i18n('label.report.groupLimit')]]"
+                 placeholder=[[i18n('placeholder.report.groupLimit')]]
+                 type="number"></nuxeo-input>
 
 
     <nuxeo-dialog id="dialogDate" class="dialog" on-iron-overlay-opened="_open" >
@@ -96,14 +129,25 @@ value="{{document.properties.report:mixintype}}" ></nuxeo-selectivity>
         <qualitified-metadata-selection style="flex:2"  input="{{input}}"></qualitified-metadata-selection>
         <paper-icon-button id="details" noink="" icon="nuxeo:add" on-tap="_addDateFieldText"></paper-icon-button>
       </div>
-      <nuxeo-input id="fieldDate" role="reportWidget" value="{{document.properties.report:dateField}}" label="[[i18n('label.report.dateField')]]" type="text"></nuxeo-input>
+      <nuxeo-input id="fieldDate"
+                   role="reportWidget"
+                   value="{{document.properties.report:dateField}}"
+                   label="[[i18n('label.report.dateField')]]"
+                   placeholder=[[i18n('placeholder.report.dateField')]]
+                   type="text"></nuxeo-input>
       <div class="buttons">
         <paper-button style="flex: auto; background-color: gainsboro ;" noink dialog-dismiss on-tap="_closeDate">Close</paper-button>
         <paper-button style="flex: auto; background-color: darkgrey ;" noink  on-tap="_clearDate">Clear</paper-button>
       </div>
     </nuxeo-dialog>
     <div class="metricsInputDiv">
-      <nuxeo-input style="flex: auto;" id="fieldDate" role="reportWidget" value="{{document.properties.report:dateField}}" label="[[i18n('label.report.dateField')]]" type="text"></nuxeo-input>
+      <nuxeo-input style="flex: auto;"
+                   id="fieldDate"
+                   role="reportWidget"
+                   value="{{document.properties.report:dateField}}"
+                   label="[[i18n('label.report.dateField')]]"
+                   placeholder=[[i18n('placeholder.report.dateField')]]
+                   type="text"></nuxeo-input>
       <paper-icon-button id="details" noink="" icon="nuxeo:add" role="button" on-tap="_toggleDialogDate"></paper-icon-button>
     </div>
 
@@ -113,14 +157,25 @@ value="{{document.properties.report:mixintype}}" ></nuxeo-selectivity>
         <qualitified-metadata-selection style="flex:2"  input="{{input}}"></qualitified-metadata-selection>
         <paper-icon-button id="details" noink="" icon="nuxeo:add" on-tap="_addKeyFieldText"></paper-icon-button>
       </div>
-      <nuxeo-input id="keyMetadata" role="reportWidget" value="{{document.properties.report:keyMetadata}}" label="[[i18n('label.report.keyMetadata')]]" type="text"></nuxeo-input>
+      <nuxeo-input id="keyMetadata"
+                   role="reportWidget"
+                   value="{{document.properties.report:keyMetadata}}"
+                   label="[[i18n('label.report.keyMetadata')]]"
+                   placeholder=[[i18n('placeholder.report.keyMetadata')]]
+                   type="text"></nuxeo-input>
       <div class="buttons">
         <paper-button style="flex: auto; background-color: gainsboro ;" noink dialog-dismiss on-tap="_closeKey">Close</paper-button>
         <paper-button style="flex: auto; background-color: darkgrey ;" noink  on-tap="_clearKey">Clear</paper-button>
       </div>
     </nuxeo-dialog>
     <div class="metricsInputDiv">
-      <nuxeo-input style="flex: auto;" id="keyMetadata" role="reportWidget" value="{{document.properties.report:keyMetadata}}" label="[[i18n('label.report.keyMetadata')]]" type="text"></nuxeo-input>
+      <nuxeo-input style="flex: auto;"
+                   id="keyMetadata"
+                   role="reportWidget"
+                   value="{{document.properties.report:keyMetadata}}"
+                   label="[[i18n('label.report.keyMetadata')]]"
+                   placeholder=[[i18n('placeholder.report.keyMetadata')]]
+                   type="text"></nuxeo-input>
       <paper-icon-button id="details" noink="" icon="nuxeo:add" role="button" on-tap="_toggleDialogKey"></paper-icon-button>
     </div>
 
@@ -129,20 +184,32 @@ value="{{document.properties.report:mixintype}}" ></nuxeo-selectivity>
         <qualitified-metadata-selection style="flex:2"  input="{{input}}"></qualitified-metadata-selection>
         <paper-icon-button id="details" noink="" icon="nuxeo:add" on-tap="_addMetadataFieldText"></paper-icon-button>
       </div>
-      <nuxeo-input id="metaValue" role="reportWidget" value="{{document.properties.report:valueMetadata}}" label="[[i18n('label.report.valueMetadata')]]" type="text"></nuxeo-input>
+      <nuxeo-input id="metaValue"
+                   role="reportWidget"
+                   value="{{document.properties.report:valueMetadata}}"
+                   label="[[i18n('label.report.valueMetadata')]]"
+                   placeholder=[[i18n('placeholder.report.valueMetadata')]]
+                   type="text"></nuxeo-input>
       <div class="buttons">
         <paper-button style="flex: auto; background-color: gainsboro ;" noink dialog-dismiss on-tap="_closeMeta">Close</paper-button>
         <paper-button style="flex: auto; background-color: darkgrey ;" noink  on-tap="_clearMeta">Clear</paper-button>
       </div>
     </nuxeo-dialog>
     <div class="metricsInputDiv">
-      <nuxeo-input style="flex: auto;" id="metaValue" role="reportWidget" value="{{document.properties.report:valueMetadata}}" label="[[i18n('label.report.valueMetadata')]]" type="text"></nuxeo-input>
+      <nuxeo-input style="flex: auto;"
+                   id="metaValue"
+                   role="reportWidget"
+                   value="{{document.properties.report:valueMetadata}}"
+                   label="[[i18n('label.report.valueMetadata')]]"
+                   placeholder=[[i18n('placeholder.report.valueMetadata')]]
+                   type="text"></nuxeo-input>
       <paper-icon-button id="details" noink="" icon="nuxeo:add" role="button" on-tap="_toggleDialogMeta"></paper-icon-button>
     </div>
 
     <nuxeo-directory-suggestion role="reportWidget"
                                 value="{{document.properties.report:withDateIntervals}}"
                                 label="[[i18n('label.report.datesInterval')]]"
+                                placeholder=[[i18n('placeholder.report.datesInterval')]]
                                 directory-name="DateIntervalsType"
                                 min-chars="0"
                                 dbl10n="true">
@@ -154,25 +221,45 @@ value="{{document.properties.report:mixintype}}" ></nuxeo-selectivity>
         <qualitified-metadata-selection style="flex:2"  input="{{input}}"></qualitified-metadata-selection>
         <paper-icon-button id="details" noink="" icon="nuxeo:add" on-tap="_addUserFieldText"></paper-icon-button>
       </div>
-      <nuxeo-input id="responsibleUser" role="reportWidget" value="{{document.properties.report:responsibleUser}}" label="[[i18n('label.report.responsibleUser')]]" type="text"></nuxeo-input>
+      <nuxeo-input id="responsibleUser"
+                   role="reportWidget"
+                   value="{{document.properties.report:responsibleUser}}"
+                   label="[[i18n('label.report.responsibleUser')]]"
+                   placeholder=[[i18n('placeholder.report.responsibleUser')]]
+                   type="text"></nuxeo-input>
       <div class="buttons">
         <paper-button style="flex: auto; background-color: gainsboro ;" noink dialog-dismiss on-tap="_closeUser">Close</paper-button>
         <paper-button style="flex: auto; background-color: darkgrey ;" noink  on-tap="_clearUser">Clear</paper-button>
       </div>
     </nuxeo-dialog>
     <div class="metricsInputDiv">
-      <nuxeo-input id="close" style="flex: auto;" id="responsibleUser" role="reportWidget" value="{{document.properties.report:responsibleUser}}" label="[[i18n('label.report.responsibleUser')]]" type="text"></nuxeo-input>
+      <nuxeo-input style="flex: auto;"
+                   id="responsibleUser"
+                   role="reportWidget"
+                   value="{{document.properties.report:responsibleUser}}"
+                   label="[[i18n('label.report.responsibleUser')]]"
+                   placeholder=[[i18n('placeholder.report.responsibleUser')]]
+                   type="text"></nuxeo-input>
       <paper-icon-button id="details" noink="" icon="nuxeo:add" role="button" on-tap="_toggleDialogUser"></paper-icon-button>
     </div>
 
 
     <h3>[[i18n('label.report.layout.display')]]</h3>
 
-    <nuxeo-input role="reportWidget" value="{{document.properties.report:dateFormat}}" label="[[i18n('label.report.dateFormat')]]" type="text"></nuxeo-input>
+    <nuxeo-input
+            role="reportWidget"
+            value="{{document.properties.report:dateFormat}}"
+            label="[[i18n('label.report.dateFormat')]]"
+            placeholder=[[i18n('placeholder.report.dateFormat')]]
+            type="text"></nuxeo-input>
 
 
     <h3>[[i18n('label.report.layout.csv')]]</h3>
-    <nuxeo-input role="reportWidget" value="{{document.properties.report:schemas}}" label="[[i18n('label.report.schemas')]]" type="text"></nuxeo-input>
+    <nuxeo-input role="reportWidget"
+                 value="{{document.properties.report:schemas}}"
+                 label="[[i18n('label.report.schemas')]]"
+                 placeholder=[[i18n('placeholder.report.schema')]]
+                 type="text"></nuxeo-input>
   </template>
 
   <script>
@@ -316,13 +403,13 @@ value="{{document.properties.report:mixintype}}" ></nuxeo-selectivity>
       },
 
       _addMetadataFieldText :function () {
-        var keyInput = this.$.metaValue;
+        var metaInput = this.$.metaValue;
         this._inputMetadataChanged();
-        if (keyInput.value == null) {
-          keyInput.value = this.groupefield;
-        } else if (keyInput.value !== null) {
-          if (!keyInput.value.includes(this.groupefield)) {
-            keyInput.value += this.groupefield;
+        if (metaInput.value == null) {
+          metaInput.value = this.metadataField;
+        } else if (metaInput.value !== null) {
+          if (!metaInput.value.includes(this.metadataField)) {
+            metaInput.value += this.metadataField;
           }}
       },
 
