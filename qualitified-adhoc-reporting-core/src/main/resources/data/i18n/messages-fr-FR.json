@@ -28,8 +28,10 @@
   "label.report.lastYear": "Afficher la valeur de l'année dernière et la variation en pourcentage",
   "label.report.lastYearValue": "N-1",
   "label.report.percentageChange": "Variation",
-  "label.report.responsible.user": "Métadonnée d'utilisateur responsable",
+  "label.report.responsibleUser": "Métadonnée d'utilisateur responsable",
   "label.report.schemas": "Schémas",
+  "label.report.format": "Formats",
+  "label.report.property": "Properiété",
 
   "label.count.numberTypes": "Types de nombres",
   "label.count.prefix": "Prefix",
@@ -54,6 +56,27 @@
   "label.metadata.nxql": "Nxql",
   "label.metadata.schemas": "Schémas",
   "label.metadata.icon": "Icône",
-  "label.report.layout.csv": "CSV"
+  "label.report.layout.csv": "CSV",
+
+  "placeholder.report.dataType":"Sélectionnez un type de données",
+  "placeholder.report.documentType" : "Sélectionnez un type de document",
+  "placeholder.report.lifecycleState" :"Sélectionnez un état de cycle de vie du document",
+  "placeholder.report.facet":"Sélectionnez une facette du document",
+  "placeholder.report.metrics":"Sélectionnez des métriques",
+  "placeholder.report.groupedBy" : "Sélectionnez un groupe",
+  "placeholder.report.groupLimit" : "Sélectionnez une limite de groupe",
+  "placeholder.report.dateField" :"Sélectionnez un champ de date",
+  "placeholder.report.datesInterval" : "Sélectionnez un intervalle de dates",
+  "placeholder.report.dateFormat" : "Sélectionnez un format de date",
+  "placeholder.report.keyMetadata" :"Sélectionnez une métadonnée clé",
+  "placeholder.report.valueMetadata" : "Sélectionnez une métadonnée de valeur",
+  "placeholder.report.responsibleUser" : "Sélectionnez un utilisateur responsable du document",
+  "placeholder.report.schemas" : "Sélectionnez des schémas",
+  "placeholder.count.numberTypes":"Sélectionnez des types de nombres",
+  "placeholder.report.title":"Entrez un titre pour le rapport",
+
+  "placeholder.report.schema" : "Sélectionnez une schema de document",
+  "placeholder.report.property" : "Sélectionnez une proprieté de document",
+  "placeholder.report.formats" : "Sélectionnez une application"
 
 }

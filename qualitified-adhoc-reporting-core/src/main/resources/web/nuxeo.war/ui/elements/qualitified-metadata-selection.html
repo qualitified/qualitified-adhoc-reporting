@@ -14,17 +14,20 @@
       <nuxeo-selectivity data="[[docTypes]]"
                          min-chars=0
                          style="flex:auto"
-                         placeholder="select doctype"
+                         label="[[i18n('label.report.documentType')]]"
+                         placeholder="[[i18n('placeholder.report.documentType')]]"
                          value="{{doctypeSelection}}" ></nuxeo-selectivity>
       <nuxeo-selectivity data="{{schemasAvailble}}"
                          min-chars=0
                          style="flex:auto"
-                         placeholder="select schema"
+                         label="[[i18n('label.report.schemas')]]"
+                         placeholder="[[i18n('placeholder.report.schema')]]"
                          value="{{schemaSelected}}" ></nuxeo-selectivity>
       <nuxeo-selectivity data="{{propsAvailble}}"
                          min-chars=0
                          style="flex:auto"
-                         placeholder="select property"
+                         label="[[i18n('label.report.property')]]"
+                         placeholder="[[i18n('placeholder.report.property')]]"
                          value="{{propsSelected}}" ></nuxeo-selectivity>
     </div>
   </template>

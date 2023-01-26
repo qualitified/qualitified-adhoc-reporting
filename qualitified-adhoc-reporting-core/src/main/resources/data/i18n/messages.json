@@ -30,6 +30,8 @@
   "label.report.percentageChange": "Percentage change",
   "label.report.responsibleUser": "Responsible User Metadata",
   "label.report.schemas": "Schemas",
+  "label.report.format": "Formats",
+  "label.report.property": "Property",
 
   "label.count.numberTypes":"Number Types",
   "label.count.prefix":"Prefix",
@@ -54,5 +56,26 @@
   "label.metadata.nxql": "Nxql",
   "label.metadata.schemas": "Schemas",
   "label.metadata.icon": "Icon",
-  "label.report.layout.csv": "CSV"
+  "label.report.layout.csv": "CSV",
+
+  "placeholder.report.dataType":"Select a Data Type",
+  "placeholder.report.documentType":"Select a Document Type",
+  "placeholder.report.lifecycleState":"Select a life cycle state of the document",
+  "placeholder.report.facet":"Select a facet of the document",
+  "placeholder.report.metrics":"Select a metrics",
+  "placeholder.report.groupedBy":"Select a group",
+  "placeholder.report.groupLimit":"Select a group limit",
+  "placeholder.report.dateField":"Select a date field",
+  "placeholder.report.datesInterval":"Select a date interval",
+  "placeholder.report.dateFormat":"Select a date format",
+  "placeholder.report.keyMetadata":"Select a key metadata",
+  "placeholder.report.valueMetadata":"Select a value metadata",
+  "placeholder.report.responsibleUser":"Select a user responsible for the document",
+  "placeholder.report.schemas":"Select schemas",
+  "placeholder.count.numberTypes":"Select number types",
+  "placeholder.report.title":"Enter a title for the report",
+
+  "placeholder.report.schema" : "Select a schema of the document",
+  "placeholder.report.property" : "Select a property of the document",
+  "placeholder.report.formats" : "Select a application"
 }
