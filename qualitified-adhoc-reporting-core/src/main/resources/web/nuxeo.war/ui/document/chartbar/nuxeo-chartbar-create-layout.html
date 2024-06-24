@@ -316,13 +316,13 @@ value="{{document.properties.report:mixintype}}" ></nuxeo-selectivity>
       },
 
       _addMetadataFieldText :function () {
-        var keyInput = this.$.metaValue;
+        var metaInput = this.$.metaValue;
         this._inputMetadataChanged();
-        if (keyInput.value == null) {
-          keyInput.value = this.groupefield;
-        } else if (keyInput.value !== null) {
-          if (!keyInput.value.includes(this.groupefield)) {
-            keyInput.value += this.groupefield;
+        if (metaInput.value == null) {
+          metaInput.value = this.metadataField;
+        } else if (metaInput.value !== null) {
+          if (!metaInput.value.includes(this.metadataField)) {
+            metaInput.value += this.metadataField;
           }}
       },
 
