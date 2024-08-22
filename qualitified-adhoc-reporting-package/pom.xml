@@ -38,6 +38,39 @@
           </buildFiles>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-dependencies</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <skip>false</skip>
+              <rules>
+                <requireReleaseDeps>
+                  <message>No Snapshots Allowed!</message>
+                  <onlyWhenRelease>false</onlyWhenRelease>
+                  <failWhenParentIsSnapshot>false</failWhenParentIsSnapshot>
+                  <!--
+                    Pour autoriser la compilation de la version snapshot pour les packages, il faut ajouter le param -Denforcer.fail=false
+                    ou bien execlure les parties suivantes.
+                  -->
+
+                  <excludes>
+                      <exclude>org.qualitified.*</exclude>
+                      <exclude>nuxeo-studio*</exclude>
+                  </excludes>
+
+                </requireReleaseDeps>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
