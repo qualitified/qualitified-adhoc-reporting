@@ -16,7 +16,7 @@
         <nuxeo-page-provider role="widget"
                              auto
                              id="reportsProvider"
-                             query="SELECT * FROM Document WHERE ecm:primaryType in ('ChartBar', 'ChartLine', 'ChartPie', 'Count', 'Table', 'List') AND ecm:isTrashed = 0 AND dc:creator ='[[user]]' AND ecm:currentLifeCycleState != 'deleted' ORDER BY dc:created ASC"
+                             query="SELECT * FROM Document WHERE ecm:primaryType in ('ChartBar', 'ChartLine', 'ChartPie', 'Count', 'Table', 'List') AND ecm:isTrashed = 0 AND dc:creator ='[[user]]' ORDER BY dc:created ASC"
                              current-page="{{reportsProvider}}">
         </nuxeo-page-provider>
 

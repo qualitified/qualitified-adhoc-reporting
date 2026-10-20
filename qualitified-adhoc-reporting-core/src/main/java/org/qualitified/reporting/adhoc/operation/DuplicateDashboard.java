@@ -1,6 +1,6 @@
 package org.qualitified.reporting.adhoc.operation;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -19,7 +19,7 @@ import java.io.IOException;
 @Operation(id= DuplicateDashboard.ID, category= Constants.CAT_EXECUTION, label="DuplicateDashboard", description="")
 public class DuplicateDashboard {
     public static final String ID="Qualitified.DuplicateDashboard";
-    private Log logger = LogFactory.getLog(DuplicateDashboard.class);
+    private static final Logger logger = LogManager.getLogger(DuplicateDashboard.class);
 
     public static final String DC_CREATOR = "dc:creator";
 
@@ -37,7 +37,7 @@ public class DuplicateDashboard {
     public void run() throws IOException {
 
         DocumentModelList reportList = session.query("SELECT * FROM Document WHERE ecm:primaryType in ('ChartBar', 'ChartLine', 'ChartPie', 'Count', 'Table', 'List') AND ecm:isTrashed = 0 AND ecm:isVersion = 0 " +
-                "AND ecm:currentLifeCycleState != 'deleted' AND dc:creator = 'Administrator' ORDER BY dc:created ASC");
+                "AND dc:creator = 'Administrator' ORDER BY dc:created ASC");
         UserWorkspaceService uws = Framework.getService(UserWorkspaceService.class);
         DocumentModel home = uws.getUserPersonalWorkspace(session.getPrincipal().getName(), session.getRootDocument());
         for (DocumentModel doc: reportList) {

@@ -16,7 +16,7 @@
   <parent>
     <groupId>org.qualitified.reporting.adhoc</groupId>
     <artifactId>qualitified-adhoc-reporting-parent</artifactId>
-    <version>6.10</version>
+    <version>7.0</version>
   </parent>
   <artifactId>qualitified-adhoc-reporting-core</artifactId>
   <name>Qualitified adhoc reporting core</name>

@@ -1,7 +1,7 @@
 package org.qualitified.reporting.adhoc.operation;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.nuxeo.ecm.automation.OperationException;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
@@ -15,7 +15,7 @@ import org.nuxeo.ecm.core.api.DocumentModelList;
 @Operation(id=GetOptionValue.ID, category= Constants.CAT_EXECUTION, label="GetOptionValue", description="")
 public class GetOptionValue {
     public static final String ID="Qualitified.GetOptionValue";
-    private Log logger = LogFactory.getLog(GetOptionValue.class);
+    private static final Logger logger = LogManager.getLogger(GetOptionValue.class);
 
     @Param(name = "defaultValue",required = false)
     protected String defaultValue;

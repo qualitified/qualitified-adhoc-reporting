@@ -2,8 +2,8 @@ package org.qualitified.reporting.adhoc.operation;
 
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
@@ -31,7 +31,7 @@ public class AvailbleLifeCycle {
     @Param(name="docTypeSelection")
     protected String docTypeSelection;
 
-    private Log logger = LogFactory.getLog(GetOptionValue.class);
+    private static final Logger logger = LogManager.getLogger(AvailbleLifeCycle.class);
 
     @OperationMethod
     public Blob run() throws IOException  {

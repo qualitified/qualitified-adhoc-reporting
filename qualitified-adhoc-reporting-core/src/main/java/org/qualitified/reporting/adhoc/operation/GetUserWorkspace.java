@@ -1,7 +1,7 @@
 package org.qualitified.reporting.adhoc.operation;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.nuxeo.ecm.automation.OperationException;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
@@ -18,7 +18,7 @@ import org.nuxeo.runtime.api.Framework;
 @Operation(id= GetUserWorkspace.ID, category= Constants.CAT_EXECUTION, label="GetUserWorkspace", description="")
 public class GetUserWorkspace {
     public static final String ID="Qualitified.GetUserWorkspace";
-    private Log logger = LogFactory.getLog(GetUserWorkspace.class);
+    private static final Logger logger = LogManager.getLogger(GetUserWorkspace.class);
 
     @Context
     protected CoreSession session;

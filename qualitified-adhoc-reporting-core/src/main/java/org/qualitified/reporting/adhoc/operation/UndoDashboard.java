@@ -1,6 +1,6 @@
 package org.qualitified.reporting.adhoc.operation;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -16,7 +16,7 @@ import java.io.IOException;
 @Operation(id= UndoDashboard.ID, category= Constants.CAT_EXECUTION, label="UndoDashboard", description="")
 public class UndoDashboard {
     public static final String ID="Qualitified.UndoDashboard";
-    private Log logger = LogFactory.getLog(UndoDashboard.class);
+    private static final Logger logger = LogManager.getLogger(UndoDashboard.class);
 
     @Context
     protected CoreSession session;
@@ -24,7 +24,7 @@ public class UndoDashboard {
     public void run() throws IOException {
         String creator = session.getPrincipal().getName();
         DocumentModelList reportList = session.query("SELECT * FROM Document WHERE ecm:primaryType in ('ChartBar', 'ChartLine', 'ChartPie', 'Count', 'Table', 'List') AND ecm:isTrashed = 0 AND ecm:isVersion = 0 " +
-                "AND ecm:currentLifeCycleState != 'deleted' AND dc:creator = '"+creator+"' ORDER BY dc:created ASC");
+                "AND dc:creator = '"+creator+"' ORDER BY dc:created ASC");
         for (DocumentModel doc: reportList) {
             session.removeDocument(doc.getRef());
             session.save();

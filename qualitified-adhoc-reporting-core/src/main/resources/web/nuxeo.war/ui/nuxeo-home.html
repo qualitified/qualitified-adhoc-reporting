@@ -290,7 +290,7 @@
       },
       _checkCustomDash: function() {
           if(this.currentUser && this.currentUser.id !== "Administrator"){
-          this.$.getCustomDocs.params = {query: `SELECT * FROM Document WHERE ecm:primaryType in ('ChartBar', 'ChartLine', 'ChartPie', 'Count', 'Table', 'List') AND ecm:isTrashed = 0 AND dc:creator ='` + this.currentUser.id + `' AND ecm:currentLifeCycleState != 'deleted' ORDER BY dc:created ASC`};
+          this.$.getCustomDocs.params = {query: `SELECT * FROM Document WHERE ecm:primaryType in ('ChartBar', 'ChartLine', 'ChartPie', 'Count', 'Table', 'List') AND ecm:isTrashed = 0 AND dc:creator ='` + this.currentUser.id + `' ORDER BY dc:created ASC`};
           this.$.getCustomDocs.set('enrichers', {'document': 'properties'});
           this.$.getCustomDocs.execute().then(function(docs) {
             if (docs && docs.entries && docs.entries.length > 0) {

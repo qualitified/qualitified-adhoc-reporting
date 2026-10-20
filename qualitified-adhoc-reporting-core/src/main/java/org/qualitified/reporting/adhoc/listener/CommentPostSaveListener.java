@@ -1,7 +1,7 @@
 package org.qualitified.reporting.adhoc.listener;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -17,7 +17,7 @@ import java.util.GregorianCalendar;
 
 public class CommentPostSaveListener implements EventListener {
 
-    private Log logger = LogFactory.getLog(CommentPostSaveListener.class);
+    private static final Logger logger = LogManager.getLogger(CommentPostSaveListener.class);
 
     @Override
     public void handleEvent(Event event) {

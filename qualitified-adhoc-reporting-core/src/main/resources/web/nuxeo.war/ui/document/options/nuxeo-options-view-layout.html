@@ -8,7 +8,7 @@
   <template>
     <div class="dataTable">
       <nuxeo-page-provider id="optionProvider" auto
-                           query="select * from Option where ecm:currentLifeCycleState != 'deleted' and ecm:isTrashed= 0 and ecm:isCheckedInVersion = 0 and ecm:ancestorId = '[[document.uid]]' "
+                           query="select * from Option where ecm:isTrashed= 0 and ecm:isVersion = 0 and ecm:ancestorId = '[[document.uid]]' "
                            page-size="40" aggregations="{{optionAggregations}}" enrichers="thumbnail, permissions"
                            page="[[pageNumber]]" params="[[params]]" schemas="dublincore,common,uid,option"
                            headers='{"X-NXfetch.document": "properties", "X-NXtranslate.directoryEntry": "label"}'
