@@ -22,7 +22,7 @@
       }
     </style>
     <nuxeo-operation id="getOption" op="Qualitified.GetOptionValue"></nuxeo-operation>
-    <nuxeo-repository-data start-date="[[startDate]]"
+    <qualitified-repository-data start-date="[[startDate]]"
                            end-date="[[_extendEndDate(endDate)]]"
                            data="{{data}}"
                            index="[[index]]"
@@ -34,9 +34,9 @@
                            group-limit="[[document.properties.report:groupLimit]]"
                            where="[[_setWhereTerm(document.properties.report:responsibleUser, responsibleUser)]]"
                            metrics="[[document.properties.report:metrics]]">
-    </nuxeo-repository-data>
+    </qualitified-repository-data>
 
-    <nuxeo-repository-data start-date="[[_lastYear(startDate)]]"
+    <qualitified-repository-data start-date="[[_lastYear(startDate)]]"
                            end-date="[[_lastYear(endDate)]]"
                            data="{{lastYearData}}"
                            index="[[index]]"
@@ -48,7 +48,7 @@
                            group-limit="[[document.properties.report:groupLimit]]"
                            where="[[_setWhereTerm(document.properties.report:responsibleUser, responsibleUser)]]"
                            metrics="[[document.properties.report:metrics]]">
-    </nuxeo-repository-data>
+    </qualitified-repository-data>
 
     <!-- <nuxeo-page-provider auto page-size="10"
                          query="[[_query(data)]]"

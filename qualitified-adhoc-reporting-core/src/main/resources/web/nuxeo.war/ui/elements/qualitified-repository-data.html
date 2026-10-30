@@ -1,0 +1,262 @@
+<dom-module id="qualitified-repository-data">
+  <template>
+    <nuxeo-operation id="queryOp" op="Repository.Query"></nuxeo-operation>
+  </template>
+  <script>
+    Polymer({
+      is: 'qualitified-repository-data',
+      properties: {
+        ecmPrimaryType: String,
+        ecmLifecycleState: String,
+        ecmMixinType: String,
+        where: Object,
+        groupedBy: String,
+        groupLimit: Number,
+        startDate: String,
+        endDate: String,
+        dateField: String,
+        withDateIntervals: String,
+        metrics: String,
+        index: String,
+        data: {
+          type: Object,
+          notify: true
+        }
+      },
+
+      observers: [
+        '_schedule(ecmPrimaryType, ecmLifecycleState, ecmMixinType, where, startDate, endDate, dateField, groupedBy, groupLimit, withDateIntervals, metrics)'
+      ],
+
+      attached: function () {
+        this._attached = true;
+        this._schedule();
+      },
+
+      _schedule: function () {
+        if (!this._attached) {
+          return;
+        }
+        if (this._timer) {
+          clearTimeout(this._timer);
+        }
+        this._timer = setTimeout(this._fetch.bind(this), 50);
+      },
+
+      _fetch: function () {
+        var token = (this._token || 0) + 1;
+        this._token = token;
+        if (!this.ecmPrimaryType) {
+          return;
+        }
+        var nxql = this._nxql();
+        var self = this;
+        this._loadDocs(nxql).then(function (docs) {
+          if (token !== self._token) {
+            return;
+          }
+          self.data = self._aggregate(docs);
+        }).catch(function () {
+          if (token !== self._token) {
+            return;
+          }
+          self.data = self.groupedBy ? [] : null;
+        });
+      },
+
+      _loadDocs: function (nxql) {
+        var self = this;
+        var docs = [];
+        var pageSize = 200;
+        var loadPage = function (pageIndex) {
+          self.$.queryOp.params = {
+            query: nxql,
+            pageSize: pageSize,
+            currentPageIndex: pageIndex
+          };
+          self.$.queryOp.headers = { 'X-NXproperties': '*' };
+          return self.$.queryOp.execute().then(function (result) {
+            var entries = result && result.entries ? result.entries : (Array.isArray(result) ? result : []);
+            docs = docs.concat(entries);
+            var reported = result && result.resultsCount;
+            if (result && result.isNextPageAvailable && entries.length && (reported == null || docs.length < reported)) {
+              return loadPage(pageIndex + 1);
+            }
+            return docs;
+          });
+        };
+        return loadPage(0);
+      },
+
+      _nxql: function () {
+        var from = this.ecmPrimaryType.indexOf(',') === -1 ? this.ecmPrimaryType.trim() : 'Document';
+        var clauses = ['ecm:isProxy = 0', 'ecm:isVersion = 0', 'ecm:isTrashed = 0'];
+        if (from === 'Document') {
+          clauses.push('ecm:primaryType IN (' + this._quotedList(this.ecmPrimaryType) + ')');
+        }
+        if (this.ecmLifecycleState) {
+          clauses.push('ecm:currentLifeCycleState IN (' + this._quotedList(this.ecmLifecycleState) + ')');
+        }
+        if (this.ecmMixinType) {
+          clauses.push("ecm:mixinType = '" + this._escape(this.ecmMixinType) + "'");
+        }
+        var dateClause = this._dateClause();
+        if (dateClause) {
+          clauses.push(dateClause);
+        }
+        var where = this.where || {};
+        Object.keys(where).forEach(function (field) {
+          if (field === 'ecm:isVersion' || field === 'ecm:isTrashed' || field === 'ecm:isProxy') {
+            return;
+          }
+          clauses.push(field + ' = ' + this._literal(where[field]));
+        }.bind(this));
+        return 'SELECT * FROM ' + from + ' WHERE ' + clauses.join(' AND ');
+      },
+
+      _dateClause: function () {
+        if (!this.dateField || (!this.startDate && !this.endDate)) {
+          return '';
+        }
+        var parts = [];
+        if (this.startDate) {
+          parts.push(this.dateField + " >= TIMESTAMP '" + this._day(this.startDate) + " 00:00:00'");
+        }
+        if (this.endDate) {
+          parts.push(this.dateField + " < TIMESTAMP '" + this._nextDay(this.endDate) + " 00:00:00'");
+        }
+        return parts.join(' AND ');
+      },
+
+      _aggregate: function (docs) {
+        var parsed = this._parseMetrics(this.metrics);
+        var groupField = this.groupedBy ? String(this.groupedBy).split(',')[0].trim() : '';
+        if (!groupField) {
+          return this._metricValue(docs, parsed);
+        }
+        var groups = {};
+        var order = [];
+        docs.forEach(function (doc) {
+          var key = this._groupKey(doc, groupField);
+          if (key == null) {
+            return;
+          }
+          if (!groups[key]) {
+            groups[key] = [];
+            order.push(key);
+          }
+          groups[key].push(doc);
+        }.bind(this));
+        var buckets = order.map(function (key) {
+          return { key: key, value: this._metricValue(groups[key], parsed) };
+        }.bind(this));
+        buckets.sort(function (a, b) {
+          return b.value - a.value;
+        });
+        if (this.groupLimit > 0 && buckets.length > this.groupLimit) {
+          buckets = buckets.slice(0, this.groupLimit);
+        }
+        return buckets;
+      },
+
+      _parseMetrics: function (metrics) {
+        if (!metrics) {
+          return { op: 'count', field: null };
+        }
+        var match = String(metrics).match(/^\s*([A-Za-z]+)\s*\(\s*([^)]+?)\s*\)\s*$/);
+        if (!match) {
+          return { op: 'count', field: null };
+        }
+        return { op: match[1].toLowerCase(), field: match[2] };
+      },
+
+      _metricValue: function (docs, parsed) {
+        if (!parsed || parsed.op === 'count' || parsed.op === 'cardinality') {
+          return docs.length;
+        }
+        var nums = [];
+        docs.forEach(function (doc) {
+          var raw = this._fieldValue(doc, parsed.field);
+          if (raw === null || raw === undefined || raw === '') {
+            return;
+          }
+          var number = Number(raw);
+          if (!isNaN(number)) {
+            nums.push(number);
+          }
+        }.bind(this));
+        if (parsed.op === 'avg') {
+          if (!nums.length) {
+            return null;
+          }
+          return nums.reduce(function (sum, value) { return sum + value; }, 0) / nums.length;
+        }
+        return nums.reduce(function (sum, value) { return sum + value; }, 0);
+      },
+
+      _groupKey: function (doc, field) {
+        var value = this._fieldValue(doc, field);
+        if (value === null || value === undefined || value === '') {
+          return null;
+        }
+        return String(value);
+      },
+
+      _fieldValue: function (doc, field) {
+        if (!doc || !field) {
+          return null;
+        }
+        if (field === 'ecm:uuid') {
+          return doc.uid;
+        }
+        if (field === 'ecm:primaryType') {
+          return doc.type;
+        }
+        if (field === 'ecm:currentLifeCycleState') {
+          return doc.state;
+        }
+        if (field === 'dc:title') {
+          return doc.title;
+        }
+        return doc.properties ? doc.properties[field] : null;
+      },
+
+      _quotedList: function (value) {
+        return String(value).split(',').map(function (item) {
+          return "'" + this._escape(item.trim()) + "'";
+        }.bind(this)).join(', ');
+      },
+
+      _literal: function (value) {
+        if (value === true) {
+          return '1';
+        }
+        if (value === false) {
+          return '0';
+        }
+        if (typeof value === 'number') {
+          return String(value);
+        }
+        return "'" + this._escape(value) + "'";
+      },
+
+      _escape: function (value) {
+        return String(value == null ? '' : value).replace(/'/g, "\\'");
+      },
+
+      _day: function (value) {
+        if (moment) {
+          return moment(value).format('YYYY-MM-DD');
+        }
+        return String(value).substring(0, 10);
+      },
+
+      _nextDay: function (value) {
+        if (moment) {
+          return moment(value).add(1, 'days').format('YYYY-MM-DD');
+        }
+        return this._day(value);
+      }
+    });
+  </script>
+</dom-module>

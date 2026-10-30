@@ -11,7 +11,7 @@
       }
     </style>
 
-    <nuxeo-repository-data start-date="[[_formatDate(startDate)]]"
+    <qualitified-repository-data start-date="[[_formatDate(startDate)]]"
                            end-date="[[_extendEndDate(endDate)]]"
                            data="{{data}}"
                            index="[[index]]"
@@ -24,9 +24,9 @@
                            with-date-intervals="[[document.properties.report:withDateIntervals]]"
                            where="[[_setWhereTerm(document.properties.report:responsibleUser, responsibleUser)]]"
                            metrics="[[document.properties.report:metrics]]">
-    </nuxeo-repository-data>
+    </qualitified-repository-data>
 
-    <nuxeo-page-provider id="provider" auto page-size="10"
+    <nuxeo-page-provider id="provider" auto page-size="1000"
                          query="[[_query(data)]]"
                          schemas="*"
                          current-page="{{documents}}">

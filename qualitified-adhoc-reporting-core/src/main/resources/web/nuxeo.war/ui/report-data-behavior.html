@@ -1,13 +1,34 @@
 <script>
   var Report = Report || {};
-  var nxHome = document.querySelector("nuxeo-app").shadowRoot.querySelector("nuxeo-home");
   /**
    * @polymerBehavior Report.DataBehavior
    */
   Report.DataBehavior = {
 
+    /* the-grid lives in qualitified-dashboard's shadow root, not nuxeo-home's. */
+    _reportDashboard: function () {
+      var node = this;
+      while (node) {
+        if (node.localName === 'qualitified-dashboard') {
+          return node;
+        }
+        node = node.domHost || (node.getRootNode && node.getRootNode().host);
+      }
+      var app = document.querySelector('nuxeo-app');
+      var home = app && app.shadowRoot && app.shadowRoot.querySelector('nuxeo-home');
+      return home && home.shadowRoot && home.shadowRoot.querySelector('iron-pages > .iron-selected qualitified-dashboard');
+    },
+
+    _reportGrid: function () {
+      var dashboard = this._reportDashboard();
+      return dashboard && dashboard.shadowRoot && dashboard.shadowRoot.querySelector('#grid1');
+    },
+
     refreshDisplay: function () {
-      nxHome._visibleChanged();
+      var dashboard = this._reportDashboard();
+      if (dashboard && dashboard._visibleChanged) {
+        dashboard._visibleChanged();
+      }
     },
 
     // _addTrackListener: function (report) {
@@ -23,11 +44,17 @@
     // },
 
     _changeGridDraggability: function (draggableValue) {
-      nxHome.shadowRoot.querySelector("#grid1").draggable = draggableValue;
+      var grid = this._reportGrid();
+      if (grid) {
+        grid.draggable = draggableValue;
+      }
     },
 
     _changeGridTileResizing: function (resizableValue) {
-      nxHome.shadowRoot.querySelector("#grid1").resizable = resizableValue;
+      var grid = this._reportGrid();
+      if (grid) {
+        grid.resizable = resizableValue;
+      }
     },
 
     /* Nuxeo.ChartDataBehavior */

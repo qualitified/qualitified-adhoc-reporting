@@ -10,7 +10,7 @@
       }
     </style>
 
-    <nuxeo-repository-data start-date="[[_formatDate(startDate)]]"
+    <qualitified-repository-data start-date="[[_formatDate(startDate)]]"
                            end-date="[[_extendEndDate(endDate)]]"
                            data="{{data}}"
                            index="[[index]]"
@@ -22,7 +22,7 @@
                            group-limit="[[document.properties.report:groupLimit]]"
                            where="[[_setWhereTerm(document.properties.report:responsibleUser, responsibleUser)]]"
                            metrics="[[document.properties.report:metrics]]">
-    </nuxeo-repository-data>
+    </qualitified-repository-data>
     <div id="outerDiv" on-mouseover="_show" on-mouseout="_hide">
       <nuxeo-card heading="[[document.properties.dc:title]]">
         <div id="displaybtns" class="buttons">

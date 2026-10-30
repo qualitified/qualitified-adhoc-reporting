@@ -22,7 +22,7 @@
       }
     </style>
     <nuxeo-operation id="getOption" op="Qualitified.GetOptionValue"></nuxeo-operation>
-    <nuxeo-repository-data role="widget"
+    <qualitified-repository-data role="widget"
                            start-date="[[startDate]]"
                            end-date="[[_extendEndDate(endDate)]]"
                            metrics="[[document.properties.report:metrics]]"
@@ -32,9 +32,9 @@
                            ecm-mixin-type="[[document.properties.report:mixintype]]"
                            where="[[_setWhereTerm(document.properties.report:responsibleUser, responsibleUser)]]"
                            date-field="[[document.properties.report:dateField]]">
-    </nuxeo-repository-data>
+    </qualitified-repository-data>
 
-    <nuxeo-repository-data role="widget"
+    <qualitified-repository-data role="widget"
                            start-date="[[_lastYear(startDate)]]"
                            end-date="[[_lastYear(endDate)]]"
                            metrics="[[document.properties.report:metrics]]"
@@ -44,7 +44,7 @@
                            ecm-mixin-type="[[document.properties.report:mixintype]]"
                            where="[[_setWhereTerm(document.properties.report:responsibleUser, responsibleUser)]]"
                            date-field="[[document.properties.report:dateField]]">
-    </nuxeo-repository-data>
+    </qualitified-repository-data>
     <div id="outerDiv" on-mouseover="_show" on-mouseout="_hide">
       <nuxeo-card heading="[[document.properties.dc:title]]">
         <div id="displaybtns" class="buttons">
@@ -156,7 +156,7 @@
       },
 
       _dataChanged: async function(data){
-        this.value = data? await this._getValue(data): "";
+        this.value = (data === undefined || data === null || data === '') ? '' : await this._getValue(data);
       },
       _lastYearDataChanged: async function(data){
         this.lastYearValue = await this._getValue(data);
@@ -181,18 +181,20 @@
         }
       },
 
-      _getCurrencyFormat: async function(){
-         let params = {};
-         params.name = "CurrencyFormat";
-         this.$.getOption.params = params;
-         let result = await this.$.getOption.execute().then(function(response){
-             if(response === null){
-                return ",";
-             }else{
-                return response.value;
-             }
-         }.bind(this));
-         return result;
+      _getCurrencyFormat: function () {
+        if (!Report._currencyFormatPromise) {
+          this.$.getOption.params = { name: 'CurrencyFormat' };
+          Report._currencyFormatPromise = this.$.getOption.execute().then(function (response) {
+            if (response == null || response === '') {
+              return ',';
+            }
+            return typeof response === 'string' ? response : (response.value || ',');
+          }).catch(function () {
+            Report._currencyFormatPromise = null;
+            return ',';
+          });
+        }
+        return Report._currencyFormatPromise;
       },
       _formatCurrency: function(val, format) {
         if(val == null){
