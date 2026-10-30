@@ -18,9 +18,15 @@
         withDateIntervals: String,
         metrics: String,
         index: String,
+        documents: {
+          type: Array,
+          notify: true,
+          value: function () { return []; }
+        },
         data: {
           type: Object,
-          notify: true
+          notify: true,
+          value: function () { return []; }
         }
       },
 
@@ -55,11 +61,13 @@
           if (token !== self._token) {
             return;
           }
+          self.documents = self._sortDocs(docs);
           self.data = self._aggregate(docs);
         }).catch(function () {
           if (token !== self._token) {
             return;
           }
+          self.documents = [];
           self.data = self.groupedBy ? [] : null;
         });
       },
@@ -126,6 +134,21 @@
           parts.push(this.dateField + " < TIMESTAMP '" + this._nextDay(this.endDate) + " 00:00:00'");
         }
         return parts.join(' AND ');
+      },
+
+      _sortDocs: function (docs) {
+        var field = this.dateField;
+        if (!field) {
+          return docs;
+        }
+        return docs.slice().sort(function (a, b) {
+          var left = a.properties && a.properties[field];
+          var right = b.properties && b.properties[field];
+          if (left == right) {
+            return 0;
+          }
+          return left > right ? 1 : -1;
+        });
       },
 
       _aggregate: function (docs) {

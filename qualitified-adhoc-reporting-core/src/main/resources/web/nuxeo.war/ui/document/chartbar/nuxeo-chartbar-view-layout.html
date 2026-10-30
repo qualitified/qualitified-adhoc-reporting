@@ -23,10 +23,11 @@
                            group-limit="[[document.properties.report:groupLimit]]"
                            with-date-intervals="[[document.properties.report:withDateIntervals]]"
                            where="[[_setWhereTerm(document.properties.report:responsibleUser, responsibleUser)]]"
-                           metrics="[[document.properties.report:metrics]]">
+                           metrics="[[document.properties.report:metrics]]"
+                           documents="{{chartDocuments}}">
     </qualitified-repository-data>
 
-    <nuxeo-page-provider id="provider" auto page-size="1000"
+    <nuxeo-page-provider id="provider" page-size="1000"
                          query="[[_query(data)]]"
                          schemas="*"
                          current-page="{{documents}}">
@@ -42,8 +43,8 @@
           </div>
         </div>
         <chart-bar id="chartBar"
-                   labels="[[_getLabels(documents)]]"
-                   values="[[_getValues(documents)]]"
+                   labels="[[_getLabels(chartDocuments)]]"
+                   values="[[_getValues(chartDocuments)]]"
                    options='{ "legend": { "display": false }, "animation": false }'>
         </chart-bar>
       </nuxeo-card>
@@ -89,14 +90,13 @@
      },
 
       _query: function (entries) {
-        if (this.document && entries && entries.length > 0) {
+        if (this.document && entries && entries.length > 0 && entries[0].key) {
           var values = entries.map(function (entry) {
             return '\'' + entry.key + '\'';
           }).join(',');
           return 'SELECT * FROM ' + this.document.properties['report:primarytype'] + ' WHERE ecm:uuid IN (' + values + ') ORDER BY ' + this.document.properties['report:dateField'] + ' ASC';
-        } else {
-          this.documents = [];
         }
+        return '';
       },
       /*_labels Modified */
       _labels: function (data) {
@@ -121,38 +121,39 @@
       },
 
       _getLabels: function (entries) {
-        //Labels should be based on a date metadata
         let labels = [];
-        if (entries && entries.length > 0 && this.document.properties['report:keyMetadata']) {
-          //let labelsPart = [];
+        if (entries && entries.length > 0 && this.document && this.document.properties['report:keyMetadata']) {
           let keyMetadata = this.document.properties['report:keyMetadata'];
-          let dateFormat = this.document.properties['report:dateFormat'];
+          let dateFormat = this.document.properties['report:dateFormat'] || 'DD/MM';
           for (let i = 0; i < entries.length; i++) {
-            labels.push(moment(entries[i].properties[keyMetadata]).format(dateFormat));
+            var raw = entries[i].properties && entries[i].properties[keyMetadata];
+            labels.push(raw && moment(raw).isValid() ? moment(raw).format(dateFormat) : '');
           }
         } else {
-          labels = this._labels(this.data);
+          labels = this._labels(this.data) || [];
         }
         return labels;
       },
 
       _getValues: function (entries) {
-        let values = [];
         if (entries && entries.length > 0 && this.document && this.document.properties['report:valueMetadata']) {
           let valuesPart = [];
           let valueMetadata = this.document.properties['report:valueMetadata'];
           let value = 0;
+          let cumulative = !!this.document.properties['report:metrics'];
           for (let i = 0; i < entries.length; i++) {
-            if (i > 0 && this.document.properties['report:metrics']) {
-              value += entries[i - 1].properties[valueMetadata];
+            var amount = Number(entries[i].properties && entries[i].properties[valueMetadata]);
+            if (isNaN(amount)) {
+              amount = 0;
             }
-            valuesPart.push(value + entries[i].properties[valueMetadata]);
+            if (cumulative && i > 0) {
+              value += Number(entries[i - 1].properties && entries[i - 1].properties[valueMetadata]) || 0;
+            }
+            valuesPart.push(cumulative ? value + amount : amount);
           }
-          values.push(valuesPart);
-        } else {
-          values = this._values(this.data);
+          return [valuesPart];
         }
-        return values;
+        return this._values(this.data) || [[]];
       }
     });
   </script>
