@@ -4,7 +4,7 @@
 -->
 <link rel="import" href="reporting-icons.html">
 <link rel="import" href="elements/qualitified-dashboard.html">
-<link rel="import" href="elements/nuxeo-document-create-popup-modified.html">
+<!--<link rel="import" href="elements/nuxeo-document-create-popup-modified.html">-->
 <dom-module id="nuxeo-home">
   <template>
     <style include="nuxeo-styles grid-styles">
@@ -177,10 +177,12 @@
     <div id="tray2" >
 
     </div>
+    <!--
     <div id="tray1" >
       <paper-fab id="createBtn" noink="" icon="nuxeo:add" on-tap="_openDialog"></paper-fab>
       <paper-tooltip for="createBtn" position="left">[[i18n('documentCreateButton.tooltip')]]</paper-tooltip>
     </div>
+    -->
     <nuxeo-document id="defaultDoc"
                     auto
                     doc-path="[[userWorkspace]]"
@@ -188,10 +190,12 @@
                     response="{{parent}}">
     </nuxeo-document>
 
+    <!--
     <nuxeo-document-create-popup-modified id="importPopup"
                                           parent="[[parent]]"
                                           default-path="[[userWorkspace]]">
     </nuxeo-document-create-popup-modified>
+  -->
   </template>
 
   <script>
