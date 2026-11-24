@@ -200,7 +200,7 @@
         if(val == null){
           return "";
         }
-        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, format);
+        return Math.round(val).toString().replace(/\B(?=(\d{3})+(?!\d))/g, format);
       }
 
     });
